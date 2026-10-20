@@ -2,7 +2,7 @@
 
 Основная схема: GitHub Pages + Google Apps Script + закрытая Google Таблица. Инструкция в [GOOGLE_SETUP.md](GOOGLE_SETUP.md).
 
-Сервер Apps Script находится в apps-script/Code.gs. Пароли и локальные данные исключены из Git. Реальный URL API настраивается в web/settings.js после авторизации Google и развертывания. Публичная система пока не запущена.
+Сервер Apps Script находится в apps-script/Code.gs. Пароли и локальные данные исключены из Git. Реальный URL API настраивается в web/settings.js после авторизации Google и развертывания. Сайт: https://skimirilov.github.io/fit-lead-training/ ; HR: https://skimirilov.github.io/fit-lead-training/hr/ . Инструкция для сотрудников — Инструкция_HR.md.
 
 Локальная Python-версия: python3 server.py, http://127.0.0.1:8000/ и /hr/.
 

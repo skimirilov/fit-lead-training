@@ -1,5 +1,8 @@
 # Fit&Lead — инструкция по Google Таблице и доступам
 
+Сайт опубликован: https://skimirilov.github.io/fit-lead-training/
+HR: https://skimirilov.github.io/fit-lead-training/hr/
+
 ## Что подготовлено
 Интерфейс для GitHub Pages, отдельная страница HR `/hr/` и сервер Google Apps Script. Таблица создаётся в вашем Google-аккаунте при первом выполнении configure и по умолчанию остаётся закрытой. Видеоматериалы воспроизводятся из Google Drive.
 
@@ -10,7 +13,7 @@ https://script.google.com/home/projects/19lOzUi0nd818mxiluBCS2yjHYt9WmNxHDzRV5JK
 https://github.com/skimirilov/fit-lead-training
 
 База создана и configure выполнен:
-https://docs.google.com/spreadsheets/d/1m433wxLLSJxQDyVm1y_KB05wKbx3yNaqBZfELoxHhsw/edit
+[адрес закрытой базы выдан владельцу отдельно]
 
 ## Первый запуск Google
 1. Откройте проект Apps Script в обычном браузере под аккаунтом skimirilov@gmail.com. Код уже сохранён.
@@ -51,4 +54,4 @@ https://docs.google.com/spreadsheets/d/1m433wxLLSJxQDyVm1y_KB05wKbx3yNaqBZfELoxH
 
 ## Ограничения и проверка
 Google применяет квоты к Apps Script и Таблицам. При ошибке сохранения интерфейс не показывает успешное завершение: запрос нужно повторить. Запрос начала использует один и тот же случайный код при повторе, чтобы не создавать дубль при потере ответа. Секреты передаются в теле POST, а не в URL.
-Локальные тесты Google-логики выполнены. Проверка настоящего браузерного обмена с `/exec` и публикация Pages требуют завершить авторизацию и развертывание Google. До этого публичная система не считается запущенной.
+Локальные тесты Google-логики выполнены. API и GitHub Pages опубликованы, браузерное подключение и создание записи кандидата проверены.
