@@ -9,6 +9,9 @@ https://script.google.com/home/projects/19lOzUi0nd818mxiluBCS2yjHYt9WmNxHDzRV5JK
 Репозиторий:
 https://github.com/skimirilov/fit-lead-training
 
+База создана и configure выполнен:
+https://docs.google.com/spreadsheets/d/1m433wxLLSJxQDyVm1y_KB05wKbx3yNaqBZfELoxHhsw/edit
+
 ## Первый запуск Google
 1. Откройте проект Apps Script в обычном браузере под аккаунтом skimirilov@gmail.com. Код уже сохранён.
 2. Выберите функцию configure в списке рядом с «Выполнить» и запустите её.

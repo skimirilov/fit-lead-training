@@ -1,2 +1,4 @@
-// Local: leave apiBase empty. GitHub Pages: set to the deployed API's HTTPS URL ending in /api/.
-window.FIT_SETTINGS = { apiBase: '' };
+window.FIT_SETTINGS = {
+  backend: 'google',
+  googleScriptUrl: 'https://script.google.com/macros/s/AKfycbzg2e9UMUJ8cwnqtn9eCzoQB2nHJU3fJrS4RSsgyyQ8stFzsWsbGSDOq22FAKAHbkKlVg/exec'
+};
