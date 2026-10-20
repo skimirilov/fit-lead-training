@@ -3,18 +3,33 @@ const pagePath=()=>location.hash.startsWith('#/')?location.hash.slice(1).split('
 const pageQuery=()=>location.hash.startsWith('#/')?location.hash.slice(1).split('?')[1]||'':location.search;
 const siteLink=path=>new URL(path.replace(/^\//,''),SITE_BASE).href;
 const blocks=window.FIT_COURSE;
-const remoteApi=Boolean(window.FIT_SETTINGS?.apiBase);
-const apiBase=remoteApi?new URL(window.FIT_SETTINGS.apiBase.replace(/\/?$/,'/')):new URL('api/',SITE_BASE);
+const googleApi=window.FIT_SETTINGS?.backend==='google';
+const remoteApi=googleApi||Boolean(window.FIT_SETTINGS?.apiBase);
+const apiBase=googleApi?null:remoteApi?new URL(window.FIT_SETTINGS.apiBase.replace(/\/?$/,'/')):new URL('api/',SITE_BASE);
 function authHeaders(path){const hr=path.startsWith('hr')||path==='export';const token=remoteApi?(hr?sessionStorage.getItem('fit_hr'):localStorage.getItem('fit_candidate')):null;return token?{Authorization:'Bearer '+token}:{}}
 const app=document.querySelector('#app');let candidate=null,rows=[],serverOffset=0;const ids=['1PvKMYFrv_f7Dls748RFlV69Zx4hamdYV','1_YvJMRlZ_9GYARCxKvZV69Yni14eICVJ','1U04JtCpC-sNPs7BKoPOZsejP-5LSAO62'];const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,data){
+ if(googleApi)return googleRequest(path,data);
  const r=await fetch(new URL(path,apiBase),{method:data?'POST':'GET',headers:{...authHeaders(path),...(data?{'Content-Type':'application/json'}:{})},body:data?JSON.stringify(data):undefined});
  let v;try{v=await r.json()}catch{throw Error('Сервер обучения недоступен. Повторите позже.')}
  if(!r.ok)throw Error(v.error||'Не удалось сохранить. Попробуйте ещё раз.');
  if(remoteApi){if(v.candidate)localStorage.setItem('fit_candidate',v.candidate.id);if(path==='hr/login'&&v.token)sessionStorage.setItem('fit_hr',v.token);if(path==='hr/logout')sessionStorage.removeItem('fit_hr')}
  return v;
 }
-async function exportCsv(){try{const r=await fetch(new URL('export',apiBase),{headers:authHeaders('export')});if(!r.ok)throw Error('Войдите в HR-панель заново');const url=URL.createObjectURL(await r.blob());const a=document.createElement('a');a.href=url;a.download='fit-lead-candidates.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){toast(e.message)}}
+function randomCode(){return Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('')}
+async function googleRequest(path,data){
+ const endpoint=window.FIT_SETTINGS.googleScriptUrl;if(!endpoint)throw Error('Сервер Google ещё не подключён');
+ const hr=path.startsWith('hr')||path==='export';let token=hr?sessionStorage.getItem('fit_hr'):localStorage.getItem('fit_candidate');
+ if(path==='start'&&!/^[a-f0-9]{64}$/.test(token||'')){token=randomCode();localStorage.setItem('fit_candidate',token)}
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45000);
+ let v;try{const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:path,token:token||'',data:{...(data||{}),...(path==='start'?{requestId:token}:{})}}),signal:controller.signal,redirect:'follow'});v=await response.json()}catch(e){throw Error('Не удалось получить подтверждение от Google. Повторите запрос: сохранённый прогресс не сбрасывается.')}finally{clearTimeout(timeout)}
+ if(v.error)throw Error(v.error);
+ if(v.candidate)localStorage.setItem('fit_candidate',v.candidate.id);
+ if(path==='hr/login'&&v.token)sessionStorage.setItem('fit_hr',v.token);
+ if(path==='hr/logout')sessionStorage.removeItem('fit_hr');
+ return v;
+}
+async function exportCsv(){try{let blob;if(googleApi){const result=await api('export');blob=new Blob(['\ufeff'+result.csv],{type:'text/csv;charset=utf-8'})}else{const r=await fetch(new URL('export',apiBase),{headers:authHeaders('export')});if(!r.ok)throw Error('Войдите в HR-панель заново');blob=await r.blob()}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='fit-lead-candidates.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){toast(e.message)}}
 
 function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',4500)}
 function go(path){location.hash=path;window.scrollTo(0,0)}window.onhashchange=render;
