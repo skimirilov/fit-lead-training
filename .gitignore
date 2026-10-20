@@ -1,0 +1,9 @@
+data/
+__pycache__/
+*.pyc
+.DS_Store
+*.swp
+warning-preview.png
+.env
+.env.*
+!.env.example
